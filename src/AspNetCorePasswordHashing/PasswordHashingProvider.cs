@@ -20,5 +20,19 @@ namespace PasswordHash
         {
             return services.AddSingleton<IHasher, THash>();
         }
+
+        public static IServiceCollection AddPBKDF2HashingServie(this IServiceCollection services)
+        {
+            return services.AddPasswordHashingService<Rfc2898Hasher>();
+        }
+
+        public static IServiceCollection AddBCrypyHashingServie(this IServiceCollection services)
+        {
+            return services.AddPasswordHashingService<BCryptHasher>();
+        }
+        public static IServiceCollection AddBCrypyHashingServie(this IServiceCollection services, Int32 cost)
+        {
+            return services.AddPasswordHashingService(_ => new BCryptHasher(cost));
+        }
     }
 }
