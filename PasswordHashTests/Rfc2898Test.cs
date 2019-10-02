@@ -1,6 +1,6 @@
+﻿using PasswordHash.Services;
 using System;
 using System.Text;
-using PasswordHash.Services;
 using Xunit;
 
 namespace PasswordHashTests
@@ -10,14 +10,14 @@ namespace PasswordHashTests
         [Fact]
         public void GenerateNewSalt()
         {
-            var hasher = new Rfc2898Hasher();
+            Rfc2898Hasher hasher = new Rfc2898Hasher();
 
             Assert.Equal(1024, hasher.Iterations);
             Assert.Equal(128, hasher.HashSize);
             Assert.Equal(32, hasher.SaltSize);
 
 
-            var hash = hasher.Hash("password");
+            String hash = hasher.Hash("password");
 
             Assert.NotNull(hash);
         }
@@ -25,9 +25,9 @@ namespace PasswordHashTests
         [Fact]
         public void ValidatePassword()
         {
-            var hasher = new Rfc2898Hasher();
-            var hash = hasher.Hash("password");
-            var bytes = Convert.FromBase64String(hash);
+            Rfc2898Hasher hasher = new Rfc2898Hasher();
+            String hash = hasher.Hash("password");
+            Byte[] bytes = Convert.FromBase64String(hash);
 
             Assert.True(hasher.Verify("password", bytes));
         }
@@ -35,8 +35,8 @@ namespace PasswordHashTests
         [Fact]
         public void ValidatePasswordAsBytes()
         {
-            var hasher = new Rfc2898Hasher();
-            var hash = hasher.Hash("password");
+            Rfc2898Hasher hasher = new Rfc2898Hasher();
+            String hash = hasher.Hash("password");
 
             hasher.Verify(Encoding.UTF8.GetBytes("password"), hash);
         }
@@ -45,8 +45,8 @@ namespace PasswordHashTests
         [Fact]
         public void ValidatePasswordWithHashString()
         {
-            var hasher = new Rfc2898Hasher();
-            var hash = hasher.Hash("password");
+            Rfc2898Hasher hasher = new Rfc2898Hasher();
+            String hash = hasher.Hash("password");
 
             hasher.Verify("password", hash);
         }
@@ -54,9 +54,9 @@ namespace PasswordHashTests
         [Fact]
         public void ValidateWrongPassword()
         {
-            var hasher = new Rfc2898Hasher();
-            var hash = hasher.Hash("password");
-            var bytes = Convert.FromBase64String(hash);
+            Rfc2898Hasher hasher = new Rfc2898Hasher();
+            String hash = hasher.Hash("password");
+            Byte[] bytes = Convert.FromBase64String(hash);
             Assert.False(hasher.Verify("not good password", bytes));
         }
     }
