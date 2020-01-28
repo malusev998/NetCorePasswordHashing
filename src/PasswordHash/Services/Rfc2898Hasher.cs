@@ -41,6 +41,11 @@ namespace PasswordHash.Services
 
         public override bool Verify(byte[] password, byte[] hash)
         {
+            return VerifyPassword(password, hash) == 0;
+        }
+
+        public int VerifyPassword(byte[] password, byte[] hash)
+        {
             byte[] salt = new byte[SaltSize];
             int offset = 0;
 
@@ -60,10 +65,13 @@ namespace PasswordHash.Services
             using var hasher = new Rfc2898DeriveBytes(password, salt, numberOfIterations);
             byte[] newHashedPassword = hasher.GetBytes(HashSize);
 
+
+            int result = 0;
+
             for (int i = 0; i < HashSize; i++)
-                if (newHashedPassword[i] != hash[i + offset])
-                    return false;
-            return true;
+                result |= newHashedPassword[i] ^ hash[i + offset];
+
+            return (1 & ((result - 1) >> 8)) - 1;
         }
     }
 }
